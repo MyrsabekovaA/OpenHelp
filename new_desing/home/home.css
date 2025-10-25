@@ -1,0 +1,42 @@
+body {
+  background: linear-gradient(135deg, #1a2a44, #0d1b2a, #1a2a44);
+  font-family: 'Arial', sans-serif;
+}
+
+.site-header {
+  border-bottom: 2px solid #00cc99;
+}
+
+.card {
+  border: 1px solid #00cc99;
+  background: rgba(13, 27, 42, 0.9);
+}
+
+.role-btn {
+  box-shadow: 0 4px 15px rgba(0, 204, 153, 0.3);
+}
+
+.modal {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.modal.show {
+  opacity: 1;
+}
+
+.modal .bg-gray-900-90 {
+  background: rgba(13, 27, 42, 0.95);
+}
+
+input:focus {
+  box-shadow: 0 0 10px rgba(0, 204, 153, 0.5);
+}
+
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  filter: brightness(1.2);
+}
