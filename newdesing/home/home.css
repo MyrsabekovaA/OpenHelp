@@ -40,3 +40,13 @@ input:focus {
 .btn:hover {
   filter: brightness(1.2);
 }
+
+body.dark {
+  background: linear-gradient(135deg, #1a2a44, #0d1b2a, #1a2a44);
+  color: #fff;
+}
+
+body.light {
+  background: linear-gradient(135deg, #e0f7fa, #b2ebf2, #e0f7fa);
+  color: #000;
+}

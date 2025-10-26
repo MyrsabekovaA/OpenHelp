@@ -13,17 +13,48 @@ let isModalOpening = false;
 
 /* ---------------- Theme handling ---------------- */
 function applyTheme(theme) {
-  document.body.className = theme;
+  if (theme === 'dark') {
+    document.body.classList.add('dark');
+    document.body.classList.remove('light');
+  } else {
+    document.body.classList.add('light');
+    document.body.classList.remove('dark');
+  }
+
   localStorage.setItem('hc_theme', theme);
 }
+
 applyTheme(localStorage.getItem('hc_theme') || 'dark');
+
 themeToggle.addEventListener('click', () => {
-  applyTheme(document.body.classList.contains('dark') ? 'light' : 'dark');
+  const newTheme = document.body.classList.contains('dark') ? 'light' : 'dark';
+  applyTheme(newTheme);
 });
+
 
 /* ---------------- Modal utilities ---------------- */
 function showModal(el) { el.classList.remove('hidden'); }
 function hideModal(el) { el.classList.add('hidden'); }
+
+/* ---------------- Close buttons ---------------- */
+if (closeRecipientModal) {
+  closeRecipientModal.addEventListener('click', () => {
+    hideModal(recipientModal);
+  });
+}
+
+if (closeSuccessModal) {
+  closeSuccessModal.addEventListener('click', () => {
+    hideModal(successModal);
+  });
+}
+
+// закрытие по клику вне модалки
+window.addEventListener('click', (e) => {
+  if (e.target === recipientModal) hideModal(recipientModal);
+  if (e.target === successModal) hideModal(successModal);
+});
+
 
 /* ---------------- Role selection ---------------- */
 roleButtons.forEach(button => {
