@@ -30,7 +30,7 @@ roleButtons.forEach(button => {
   button.addEventListener('click', (e) => {
     const role = button.dataset.role;
     if (role === 'recipient') showModal(recipientModal);
-    if (role === 'donor') window.location.href = 'donor-dashboard.html';
+    if (role === 'donor') window.location.href = './home/donor-dashboard.html';
   });
 });
 
@@ -70,7 +70,7 @@ if (recipientForm) {
 
     setTimeout(() => {
       hideModal(successModal);
-      window.location.href = 'dashboard-recipient.html'; // ✅ правильный редирект
+      window.location.href = './home/dashboard-recipient.html'; // ✅ правильный редирект
     }, 1500);
 
     isSubmitting = false;
