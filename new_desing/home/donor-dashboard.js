@@ -1,141 +1,98 @@
-// donor-dashboard.js — Логика для страницы доноров
+let signer, contract, selectedProjectId = null, donorAddress = null;
 
-/* ---------------- DOM shortcuts ---------------- */
-const recipientsList = document.getElementById('recipientsList');
-const donateModal = document.getElementById('donateModal');
-const donateForm = document.getElementById('donateForm');
-const closeDonateModal = document.getElementById('closeDonateModal');
-const modalTitle = document.getElementById('modalTitle');
-const donateAmount = document.getElementById('donateAmount');
-const themeToggle = document.getElementById('themeToggle');
-const backButton = document.getElementById('backButton');
+  (async function init() {
+  try {
+  const { signer: _signer } = await getProviderAndSigner();
+  signer = _signer;
+  donorAddress = await signer.getAddress();
+  contract = getContract(signer);
 
-let selectedRecipient = null;
+  document.getElementById('closeDonate').onclick = () => document.getElementById('donateModal').close();
+  document.getElementById('donateForm').addEventListener('submit', onDonate);
 
-/* ---------------- Theme handling ---------------- */
-function applyTheme(theme) {
-  document.body.style.background = theme === 'dark' 
-    ? 'linear-gradient(135deg, #1a2a44, #0d1b2a, #1a2a44)' 
-    : 'linear-gradient(135deg, #e0f7fa, #b2ebf2, #e0f7fa)';
-  document.body.classList.toggle('dark', theme === 'dark');
-  document.body.classList.toggle('light', theme === 'light');
-  themeToggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
-  localStorage.setItem('hc_theme', theme);
+  await renderCatalog();
+} catch (e) {
+  console.error(e);
+  alert(e.message || 'Ошибка инициализации');
 }
-(function initTheme() {
-  const saved = localStorage.getItem('hc_theme');
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  applyTheme(saved || (prefersDark ? 'dark' : 'light'));
 })();
-themeToggle.addEventListener('click', () => {
-  const newTheme = document.body.classList.contains('dark') ? 'light' : 'dark';
-  applyTheme(newTheme);
-});
 
-/* ---------------- Modal utilities ---------------- */
-function showModal(el) { 
-  if (el) { 
-    el.classList.remove('hidden'); 
-    el.classList.add('fade-in'); 
-    el.setAttribute('aria-hidden', 'false'); 
-    console.log('Модал открыт:', el.id);
-  } 
-}
-function hideModal(el) { 
-  if (el) { 
-    el.classList.remove('fade-in'); 
-    el.classList.add('hidden'); 
-    el.setAttribute('aria-hidden', 'true'); 
-    console.log('Модал закрыт:', el.id);
-  } 
-}
+  async function renderCatalog() {
+  const wrap = document.getElementById('projects');
+  wrap.innerHTML = 'Загрузка...';
 
-/* ---------------- Load recipients ---------------- */
-function loadRecipients() {
-  // Placeholder: данные из localStorage (в реальности из блокчейна)
-  const profiles = JSON.parse(localStorage.getItem('hc_profiles') || '[]');
-  if (profiles.length === 0) {
-    recipientsList.innerHTML = '<p class="text-center text-teal-200">Нет зарегистрированных нуждающихся.</p>';
-    return;
-  }
+  const nextId = await contract.nextProjectId();
+  const n = Number(nextId);
+  if (n <= 1) { wrap.innerHTML = '<div class="opacity-70">Пока нет проектов</div>'; return; }
 
-  recipientsList.innerHTML = '';
-  profiles.forEach((profile, index) => {
-    const card = document.createElement('div');
-    card.className = 'card bg-gray-900/50 p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300';
-    card.innerHTML = `
-      <h3 class="text-xl font-semibold text-teal-200">${profile.name || `Пользователь ${index + 1}`}</h3>
-      <p class="text-sm text-teal-300">Собрано: ${profile.collected || 0} сом из ${profile.goal || 100000} сом</p>
-      <button class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full">Подробнее</button>
+  wrap.innerHTML = '';
+  for (let id = n - 1; id >= 1; id--) {
+  const p = await contract.getProject(id);
+  const meta = HCStorage.getProjectMeta(id) || {};
+  const balanceEth = ethers.utils.formatEther(p.balance);
+  const donations = HCStorage.getDonations(id);
+
+  const card = document.createElement('div');
+  card.className = 'rounded-xl bg-white/5 p-4 space-y-2';
+  card.innerHTML = `
+      <div class="flex justify-between items-center">
+        <div class="text-lg font-semibold">${meta.title || `Project #${id}`}</div>
+        <div class="text-sm opacity-80">#${id}</div>
+      </div>
+      <div>Владелец: <span class="font-mono">${p.owner.slice(0,6)}...${p.owner.slice(-4)}</span></div>
+      <div>Описание: <a class="underline" href="https://ipfs.io/ipfs/${p.descriptionHash}" target="_blank">${p.descriptionHash}</a></div>
+      ${p.proofHash ? `<div>Proof: <a class="underline" href="https://ipfs.io/ipfs/${p.proofHash}" target="_blank">${p.proofHash}</a></div>` : ''}
+      <div>Баланс: <b>${balanceEth} ETH</b>${meta.goalEth ? ` / цель ${meta.goalEth} ETH` : ''}</div>
+
+      <button class="px-4 py-2 rounded bg-indigo-600 w-full" data-d="${id}">Пожертвовать</button>
+
+      <div class="pt-2">
+        <div class="text-sm opacity-80 mb-1">Недавние донаты:</div>
+        <div id="don-${id}" class="space-y-1">${renderDonationsHtml(donations)}</div>
+      </div>
     `;
-    card.querySelector('button').addEventListener('click', () => showRecipientDetails(profile));
-    recipientsList.appendChild(card);
-  });
+  wrap.appendChild(card);
+  card.querySelector(`[data-d="${id}"]`).onclick = () => openDonate(id, meta.title);
+}
 }
 
-function showRecipientDetails(profile) {
-  selectedRecipient = profile;
-  modalTitle.textContent = `Поддержать ${profile.name || 'пользователя'}`;
-  showModal(donateModal);
+  function renderDonationsHtml(list) {
+  if (!list || !list.length) return '<div class="text-white/60 text-sm">Пока нет донатов.</div>';
+  return list.slice(-3).reverse().map(d =>
+  `<div class="rounded bg-white/10 px-3 py-2 text-sm">
+       <div><b>${d.amountEth} ETH</b> — от ${d.donor.slice(0,6)}...${d.donor.slice(-4)}</div>
+       <div class="opacity-70">tx: <a class="underline" href="https://sepolia.etherscan.io/tx/${d.txHash}" target="_blank">${d.txHash.slice(0,10)}...</a> · ${new Date(d.ts).toLocaleString()}</div>
+     </div>`
+  ).join('');
 }
 
-/* ---------------- Donate logic ---------------- */
-if (donateForm) {
-  donateForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (!selectedRecipient || !window.ethereum) {
-      alert('Подключите MetaMask или выберите получателя!');
-      return;
-    }
-
-    const amount = parseFloat(donateAmount.value);
-    if (isNaN(amount) || amount <= 0) {
-      alert('Введите корректную сумму!');
-      return;
-    }
-
-    try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      await provider.send("eth_requestAccounts", []);
-      const signer = provider.getSigner();
-      const donorAddress = await signer.getAddress();
-      console.log('Донор подключён:', donorAddress);
-
-      const contractAddress = '0xYourDeployedContractAddress'; // Замените на реальный адрес
-      const contractABI = [
-        {"inputs":[{"internalType":"address","name":"_recipient","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"donate","outputs":[],"stateMutability":"payable","type":"function"}
-        // Добавьте полный ABI вашего контракта
-      ];
-      const contract = new ethers.Contract(contractAddress, contractABI, signer);
-      console.log('Контракт инициализирован:', contractAddress);
-
-      const tx = await contract.donate(selectedRecipient.wallet, ethers.utils.parseEther(amount.toString()), { value: ethers.utils.parseEther(amount.toString()) });
-      console.log('Транзакция отправлена:', tx.hash);
-      await tx.wait();
-      console.log('Транзакция подтверждена:', tx.hash);
-
-      alert(`Успешно отправлено ${amount} сом!`);
-      hideModal(donateModal);
-      loadRecipients(); // Обновляем список
-    } catch (err) {
-      console.error('Ошибка при донате:', err);
-      alert('Ошибка: ' + (err.message || 'Проверь консоль для деталей.'));
-    }
-  });
+  function openDonate(id, title) {
+  selectedProjectId = id;
+  document.getElementById('donateTitle').textContent = `Поддержать ${title || `Project #${id}`}`;
+  document.getElementById('donateAmount').value = '0.01';
+  document.getElementById('donateModal').showModal();
 }
 
-closeDonateModal.addEventListener('click', () => hideModal(donateModal));
-window.addEventListener('click', (e) => {
-  if (!donateModal.contains(e.target) && e.target !== donateModal) hideModal(donateModal);
+  async function onDonate(e) {
+  e.preventDefault();
+  const amountEth = parseFloat((document.getElementById('donateAmount').value || '').trim());
+  if (!selectedProjectId || !(amountEth > 0)) { alert('Введите сумму'); return; }
+
+  const wei = ethers.utils.parseEther(String(amountEth));
+  const tx = await contract.donate(selectedProjectId, { value: wei });
+  await tx.wait();
+
+  // локально пишем историю донатов (для быстрого UI)
+  HCStorage.addDonation(selectedProjectId, {
+  amountEth,
+  donor: donorAddress,
+  txHash: tx.hash,
+  ts: Date.now(),
 });
 
-/* ---------------- Navigation ---------------- */
-backButton.addEventListener('click', () => {
-  window.location.href = './index.html'; // Относительный путь
-});
+  document.getElementById('donateModal').close();
+  alert('Спасибо за поддержку ❤️');
 
-/* ---------------- Initialization ---------------- */
-window.addEventListener('load', () => {
-  loadRecipients();
-  console.log('Страница доноров загружена');
-});
+  // обновим карточку (баланс и список донатов)
+  await renderCatalog();
+}
