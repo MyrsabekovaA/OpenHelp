@@ -1,0 +1,33 @@
+export const DONATION_ABI = [
+    {
+        "inputs": [{"internalType":"string","name":"_descriptionHash","type":"string"}],
+        "name":"createProject","outputs":[],"stateMutability":"nonpayable","type":"function"
+    },
+    {
+        "inputs":[{"internalType":"uint256","name":"_projectId","type":"uint256"}],
+        "name":"donate","outputs":[],"stateMutability":"payable","type":"function"
+    },
+    {
+        "inputs":[{"internalType":"uint256","name":"_projectId","type":"uint256"},{"internalType":"uint256","name":"_amount","type":"uint256"}],
+        "name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"
+    },
+    {
+        "inputs":[{"internalType":"uint256","name":"_projectId","type":"uint256"},{"internalType":"string","name":"_proofHash","type":"string"}],
+        "name":"updateProof","outputs":[],"stateMutability":"nonpayable","type":"function"
+    },
+    {
+        "inputs":[{"internalType":"uint256","name":"","type":"uint256"}],
+        "name":"projects","outputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"string","name":"descriptionHash","type":"string"},{"internalType":"string","name":"proofHash","type":"string"},{"internalType":"uint256","name":"balance","type":"uint256"}],
+        "stateMutability":"view","type":"function"
+    },
+    {
+        "inputs":[],
+        "name":"nextProjectId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],
+        "stateMutability":"view","type":"function"
+    },
+    {
+        "inputs":[{"internalType":"uint256","name":"_projectId","type":"uint256"}],
+        "name":"getProject","outputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"string","name":"descriptionHash","type":"string"},{"internalType":"string","name":"proofHash","type":"string"},{"internalType":"uint256","name":"balance","type":"uint256"}],
+        "stateMutability":"view","type":"function"
+    }
+];

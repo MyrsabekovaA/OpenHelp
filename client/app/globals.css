@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root { color-scheme: dark; }
+body { @apply bg-bg text-white; }
+
+
+.glass {
+    background: rgba(17,24,39,0.5);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+
+.btn { @apply inline-flex items-center justify-center rounded-2xl px-4 py-2 font-medium shadow-glass transition hover:opacity-90; }
+.btn-brand { @apply bg-brand text-white; }
+.btn-muted { @apply bg-card text-white border border-white/10; }
+.input { @apply w-full rounded-xl bg-card/70 border border-white/10 px-4 py-3 outline-none focus:border-brand; }
