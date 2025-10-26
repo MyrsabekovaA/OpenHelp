@@ -1,0 +1,28 @@
+{
+  "name": "OpenHelp",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@wagmi/core": "2.13.0",
+    "viem": "2.14.1",
+    "wagmi": "2.12.18",
+    "next": "14.2.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "web3.storage": "4.5.6",
+    "clsx": "2.1.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "10.4.20",
+    "postcss": "8.4.47",
+    "tailwindcss": "3.4.13",
+    "eslint": "8.57.0",
+    "eslint-config-next": "14.2.5"
+  }
+}
