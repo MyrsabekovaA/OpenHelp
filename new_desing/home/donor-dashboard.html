@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealChain — Помочь нуждающимся</title>
+  <!-- Предупреждение: CDN Tailwind не для продакшена. Для продакшена установи локально: https://tailwindcss.com/docs/installation -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="home.css" />
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 204, 153, 0.3);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-teal-900 to-gray-800 text-white min-h-screen">
+  <header class="flex justify-between items-center p-6 bg-teal-800/50 backdrop-blur-md shadow-lg rounded-b-2xl">
+    <div class="flex items-center space-x-4">
+      <div class="text-4xl pulse text-green-400">💚</div>
+      <div>
+        <h1 class="text-3xl font-extrabold">HealChain</h1>
+        <p class="text-sm text-teal-200">Помочь нуждающимся</p>
+      </div>
+    </div>
+    <div class="flex space-x-4">
+      <button id="backButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">Назад</button>
+      <button id="themeToggle" class="text-2xl bg-teal-700/50 p-3 rounded-full hover:bg-teal-600 transition-all duration-300">🌓</button>
+    </div>
+  </header>
+
+  <main class="container mx-auto p-6">
+    <section class="bg-gray-800/70 backdrop-blur-md rounded-2xl p-8 shadow-2xl max-w-5xl mx-auto mt-10 fade-in">
+      <h2 class="text-4xl font-bold text-center mb-8 text-teal-300">Список нуждающихся</h2>
+      <div id="recipientsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Карточки будут добавлены динамически -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Модальное окно для доната -->
+  <div id="donateModal" class="modal fixed inset-0 bg-black/70 flex items-center justify-center hidden z-100">
+    <div class="bg-gray-900/90 backdrop-blur-md rounded-xl p-8 shadow-2xl w-full max-w-md">
+      <h3 id="modalTitle" class="text-2xl font-bold text-teal-300 mb-6">Поддержать</h3>
+      <form id="donateForm" class="space-y-6">
+        <div>
+          <label class="block text-sm font-medium text-teal-200">Сумма (сом)</label>
+          <input type="number" id="donateAmount" placeholder="Введите сумму" class="w-full p-3 bg-gray-800/50 border border-teal-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" required />
+        </div>
+        <div class="flex justify-between">
+          <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">Отправить</button>
+          <button type="button" id="closeDonateModal" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">Закрыть</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Подключение библиотек -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="donor-dashboard.js"></script>
+</body>
+</html>

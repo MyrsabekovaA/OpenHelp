@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealChain — Мой профиль</title>
+  <!-- Предупреждение: CDN Tailwind не для продакшена. Для продакшена установи локально: https://tailwindcss.com/docs/installation -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="home.css" />
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .progress-bar {
+      height: 20px;
+      background-color: #1a2a44;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress {
+      height: 100%;
+      background: linear-gradient(90deg, #00cc99, #00ffcc);
+      transition: width 0.5s ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-teal-900 to-gray-800 text-white min-h-screen">
+  <header class="flex justify-between items-center p-6 bg-teal-800/50 backdrop-blur-md shadow-lg rounded-b-2xl">
+    <div class="flex items-center space-x-4">
+      <div class="text-4xl pulse text-green-400">💚</div>
+      <div>
+        <h1 class="text-3xl font-extrabold">HealChain</h1>
+        <p class="text-sm text-teal-200">Мой профиль</p>
+      </div>
+    </div>
+    <div class="flex space-x-4">
+      <button id="backButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">Назад</button>
+      <button id="logoutButton" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">Выход</button>
+      <button id="themeToggle" class="text-2xl bg-teal-700/50 p-3 rounded-full hover:bg-teal-600 transition-all duration-300">🌓</button>
+    </div>
+  </header>
+
+  <main class="container mx-auto p-6">
+    <section class="bg-gray-800/70 backdrop-blur-md rounded-2xl p-8 shadow-2xl max-w-4xl mx-auto mt-10 fade-in">
+      <h2 class="text-4xl font-bold text-center mb-8 text-teal-300">Мой профиль</h2>
+
+      <!-- Профиль пользователя -->
+      <div id="profileInfo" class="mb-8 p-6 bg-gray-900/50 rounded-lg shadow-md">
+        <h3 class="text-2xl font-semibold text-teal-200 mb-4">Информация</h3>
+        <p id="profileName" class="text-lg">Имя: <span class="font-medium">Загрузка...</span></p>
+        <p id="profileEmail" class="text-lg">Email: <span class="font-medium">Загрузка...</span></p>
+        <p id="profileWallet" class="text-lg">Кошелёк: <span class="font-medium">Загрузка...</span></p>
+      </div>
+
+      <!-- Прогресс сбора средств -->
+      <div id="donationProgress" class="mb-8 p-6 bg-gray-900/50 rounded-lg shadow-md">
+        <h3 class="text-2xl font-semibold text-teal-200 mb-4">Сбор средств</h3>
+        <p id="collectedAmount" class="text-xl mb-2">Собрано: <span class="font-bold text-green-400">0 сом</span></p>
+        <p id="remainingAmount" class="text-xl mb-2">Осталось: <span class="font-bold text-red-400">100,000 сом</span></p>
+        <div class="progress-bar">
+          <div id="progressFill" class="progress" style="width: 0%;"></div>
+        </div>
+        <p id="goalAmount" class="text-sm text-teal-200 mt-2">Цель: 100,000 сом</p>
+      </div>
+
+      <!-- Дополнительные действия -->
+      <div class="text-center">
+        <button id="updateProfile" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 mb-4">Обновить профиль</button>
+        <button id="withdrawFunds" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg">Вывести средства</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Подключение библиотек -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

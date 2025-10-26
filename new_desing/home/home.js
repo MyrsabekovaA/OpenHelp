@@ -1,4 +1,4 @@
-// script.js — Логика для HealChain с улучшенной отладкой модала
+// script.js — Логика для HealChain с редиректом на профиль и донорскую страницу
 
 /* ---------------- DOM shortcuts ---------------- */
 const themeToggle = document.getElementById('themeToggle');
@@ -62,7 +62,7 @@ roleButtons.forEach(button => {
       e.stopPropagation();
       showModal(recipientModal);
     } else if (role === 'donor') {
-      alert('Функция для доноров в разработке! Скоро будет доступна.');
+      window.location.href = 'donor-dashboard.html'; // Редирект на страницу доноров
     }
   });
 });
@@ -146,7 +146,7 @@ if (recipientForm) {
       await tx.wait();
       console.log('Транзакция подтверждена:', tx.hash);
 
-      userProfile = { role: 'recipient', name, email, password, proofHash, wallet: walletAddress, created: Date.now() };
+      userProfile = { role: 'recipient', name, email, password, proofHash, wallet: walletAddress, created: Date.now(), goal: 100000 }; // Добавим цель
       localStorage.setItem('hc_profile', JSON.stringify(userProfile));
       console.log('Профиль сохранён:', userProfile);
 
@@ -154,7 +154,7 @@ if (recipientForm) {
       showModal(successModal);
       setTimeout(() => {
         hideModal(successModal);
-        window.location.href = 'dashboard-recipient.html';
+        window.location.href = 'dashboard-recipient.html'; // Редирект на профиль
       }, 3000);
     } catch (err) {
       console.error('Ошибка в процессе:', err);
