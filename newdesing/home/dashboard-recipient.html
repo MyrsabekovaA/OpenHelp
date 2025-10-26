@@ -13,49 +13,47 @@
     <script src="../../scripts/storage.js"></script>
 </head>
 <body class="bg-slate-900 text-white min-h-screen">
-<div class="max-w-4xl mx-auto p-6 space-y-6">
-    <header class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold">Кабинет фонда</h1>
-        <a href="../index.html" class="underline">← На главную</a>
+<div class="max-w-4xl mx-auto p-6 space-y-8">
+    <header class="flex justify-between items-center bg-slate-800 rounded-xl shadow-lg p-6 mb-4">
+        <h1 class="text-3xl font-bold text-indigo-300">Кабинет фонда</h1>
+        <a href="../index.html" class="px-4 py-2 rounded-lg bg-indigo-600 text-white font-bold shadow-md hover:bg-indigo-500 transition">← На главную</a>
     </header>
 
-    <section id="accountBox" class="bg-white/5 rounded-xl p-4"></section>
+    <section id="accountBox" class="bg-gradient-to-r from-indigo-900 via-slate-900 to-indigo-900 rounded-xl p-6 shadow-md border border-indigo-700 mb-6"></section>
 
-    <section class="bg-white/5 rounded-xl p-4 space-y-3">
-        <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold">Мои проекты</h2>
-            <button id="openCreateProject" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500">
-                Создать проект
-            </button>
+    <section class="bg-slate-800 rounded-xl p-6 space-y-6 shadow-lg border border-slate-700">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-2xl font-semibold text-indigo-200">Мои проекты</h2>
+            <button id="openCreateProject" class="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold shadow-md transition">Создать проект</button>
         </div>
-        <div id="projectsList" class="space-y-3"></div>
+        <div id="projectsList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
     </section>
 
     <!-- Modal: Создание проекта -->
-    <dialog id="createModal" class="bg-slate-800 rounded-xl p-0 w-full max-w-lg">
-        <form id="createProjectForm" class="p-6 space-y-3">
-            <h3 class="text-lg font-semibold">Создать проект</h3>
-            <input id="pTitle" class="w-full bg-white/10 rounded px-3 py-2" placeholder="Название проекта" />
-            <input id="pCategory" class="w-full bg-white/10 rounded px-3 py-2" placeholder="Категория (например, медицина)" />
-            <input id="pGoal" class="w-full bg-white/10 rounded px-3 py-2" placeholder="Цель в ETH (например 1)" />
-            <label class="block text-sm text-white/70">Описание / документ (файл)</label>
-            <input type="file" id="pDoc" class="w-full" />
+    <dialog id="createModal" class="bg-slate-900 rounded-xl p-0 w-full max-w-lg shadow-xl border border-indigo-700">
+        <form id="createProjectForm" class="p-8 space-y-4">
+            <h3 class="text-xl font-semibold text-indigo-300 mb-2">Создать проект</h3>
+            <input id="pTitle" class="w-full bg-slate-800 border border-indigo-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="Название проекта" />
+            <input id="pCategory" class="w-full bg-slate-800 border border-indigo-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="Категория (например, медицина)" />
+            <input id="pGoal" class="w-full bg-slate-800 border border-indigo-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="Цель в ETH (например 1)" />
+            <label class="block text-sm text-indigo-200">Описание / документ (файл)</label>
+            <input type="file" id="pDoc" class="w-full bg-slate-800 border border-indigo-600 rounded px-3 py-2 text-white" />
             <div class="flex justify-end gap-2 pt-2">
-                <button type="button" id="closeCreate" class="px-3 py-2 rounded bg-white/10">Отмена</button>
-                <button type="submit" class="px-4 py-2 rounded bg-indigo-600">Создать</button>
+                <button type="button" id="closeCreate" class="px-4 py-2 rounded bg-slate-700 text-white hover:bg-slate-600 transition">Отмена</button>
+                <button type="submit" class="px-5 py-2 rounded bg-indigo-600 text-white font-bold shadow-md hover:bg-indigo-500 transition">Создать</button>
             </div>
         </form>
     </dialog>
 
     <!-- Modal: Запрос на вывод -->
-    <dialog id="withdrawModal" class="bg-slate-800 rounded-xl p-0 w-full max-w-lg">
-        <form id="withdrawForm" class="p-6 space-y-3">
-            <h3 class="text-lg font-semibold">Запросить вывод</h3>
-            <input id="wAmount" class="w-full bg-white/10 rounded px-3 py-2" placeholder="Сумма в ETH" />
-            <input id="wReason" class="w-full bg-white/10 rounded px-3 py-2" placeholder="Комментарий: на что идут средства" />
+    <dialog id="withdrawModal" class="bg-slate-900 rounded-xl p-0 w-full max-w-lg shadow-xl border border-green-700">
+        <form id="withdrawForm" class="p-8 space-y-4">
+            <h3 class="text-xl font-semibold text-green-300 mb-2">Запросить вывод</h3>
+            <input id="wAmount" class="w-full bg-slate-800 border border-green-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Сумма в ETH" />
+            <input id="wReason" class="w-full bg-slate-800 border border-green-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Комментарий: на что идут средства" />
             <div class="flex justify-end gap-2 pt-2">
-                <button type="button" id="closeWithdraw" class="px-3 py-2 rounded bg-white/10">Отмена</button>
-                <button type="submit" class="px-4 py-2 rounded bg-green-600">Создать запрос</button>
+                <button type="button" id="closeWithdraw" class="px-4 py-2 rounded bg-slate-700 text-white hover:bg-slate-600 transition">Отмена</button>
+                <button type="submit" class="px-5 py-2 rounded bg-green-600 text-white font-bold shadow-md hover:bg-green-500 transition">Создать запрос</button>
             </div>
         </form>
     </dialog>

@@ -22,6 +22,21 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.05); }
     }
+    .heart-anim {
+      transition: transform 0.5s cubic-bezier(.4,2,.3,1), color 0.5s cubic-bezier(.4,2,.3,1);
+      will-change: transform, color;
+    }
+    .heart-anim:hover {
+      transform: translateY(-12px) rotate(-18deg) scale(1.2);
+      color: #ef4444 !important; /* Tailwind red-500 */
+      text-shadow: 0 0 16px #ef4444;
+    }
+    body, .modal, input, label, h1, h2, h3, h4, h5, h6, p, button, .role-btn {
+      color: #fff !important;
+    }
+    input, label, h1, h2, h3, p, .role-btn {
+      transition: color 0.3s;
+    }
     /* Временный стиль для отладки модала */
     .modal.debug {
       border: 2px solid red !important;
@@ -40,7 +55,7 @@
 <body class="bg-gradient-to-br from-gray-900 via-teal-900 to-gray-800 text-white min-h-screen">
   <header class="flex justify-between items-center p-6 bg-teal-800/50 backdrop-blur-md shadow-lg rounded-b-2xl">
     <div class="flex items-center space-x-4">
-      <div class="text-4xl pulse text-green-400">💚</div>
+      <div class="text-4xl pulse heart-anim text-green-400">💚</div>
       <div>
         <h1 class="text-3xl font-extrabold">HealChain</h1>
         <p class="text-sm text-teal-200">Платформа помощи и надежды</p>
@@ -53,8 +68,8 @@
     <section class="bg-gray-800/70 backdrop-blur-md rounded-2xl p-8 shadow-2xl max-w-4xl mx-auto mt-10">
       <h2 class="text-4xl font-bold text-center mb-8 text-teal-300">Стань частью изменений</h2>
       <div class="doner flex justify-center gap-6 mb-10">
-        <button class="role-btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300" data-role="recipient">Я нуждаюсь в помощи</button>
-        <button class="role-btn bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300" data-role="donor">Я хочу помочь</button>
+        <button class="role-btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300" data-role="recipient">Я нуждаюсь в помощи</button>
+        <button class="role-btn bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300" data-role="donor">Я хочу помочь</button>
       </div>
 
       <!-- Модальное окно для получателя -->
@@ -79,8 +94,8 @@
               <input type="file" id="proofDoc" accept="image/*,application/pdf" class="w-full p-3 bg-gray-800/50 border border-teal-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500" required />
             </div>
             <div class="flex justify-between">
-              <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">Создать профиль</button>
-              <button type="button" id="closeRecipientModal" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">Закрыть</button>
+              <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300">Создать профиль</button>
+              <button type="button" id="closeRecipientModal" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300">Закрыть</button>
             </div>
           </form>
         </div>
@@ -91,7 +106,7 @@
         <div class="bg-gray-900/90 backdrop-blur-md rounded-xl p-8 shadow-2xl w-full max-w-md text-center transform transition-all duration-300 debug-inner">
           <h3 class="text-2xl font-bold text-teal-300 mb-4">Успешно!</h3>
           <p class="text-teal-200 mb-6">Ваш профиль создан. Перенаправление...</p>
-          <button id="closeSuccessModal" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">OK</button>
+          <button id="closeSuccessModal" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300">OK</button>
         </div>
       </div>
     </section>
